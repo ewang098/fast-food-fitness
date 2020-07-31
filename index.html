@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fast Food Fitness</title>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<header> 
+    <h1>Fast Food Fitness</h1>  
+</header> 
+
+    <style>
+        th {
+            color: #fff;
+        }
+
+        th {
+            background-color:darkslategray;
+        }
+    </style>
+
+    <div class="btn-group" style="width:100%">
+        <button style="width:25%" onclick="populateTable(0)">Wendy's</button>
+        <button style="width:25%" onclick="populateTable(1)">McDonald's</button>
+        <button style="width:25%" onclick="populateTable(2)">Taco Bell</button>
+    </div>
+
+    <table>
+        <tr>
+            <th data-column="brand" data-order="desc">Brand &#9650</th>
+            <th data-column="item" data-order="desc">Item &#9650</th>
+            <th data-column="cals" data-order="desc">Calories &#9650</th>
+            <th data-column="protein" data-order="desc">Protein (g) &#9650</th>
+            <th data-column="fitnessRatio" data-order="desc">Fitness Ratio &#9650</th>
+        </tr>
+
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+
+    <script>
+        function populateTable(restNum) {
+            var request = new XMLHttpRequest();
+            var restaurants = [
+                "Wendy's.csv", "McDonald's.csv", "Taco Bell.csv"
+            ];
+            request.open("GET", restaurants[restNum], false);
+            request.send(null);
+
+            //https://reactgo.com/removeduplicateobjects/
+            function getUnique(arr, comp) {
+
+                // store the comparison  values in array
+                const unique = arr.map(e => e[comp])
+
+                    // store the indexes of the unique objects
+                    .map((e, i, final) => final.indexOf(e) === i && i)
+
+                    // eliminate the false indexes & return unique objects
+                    .filter((e) => arr[e]).map(e => arr[e]);
+
+                return unique;
+            }
+
+            var allItemNames = []
+            var myArray = new Array();
+            var jsonObject = request.responseText.split(/\r?\n|\r/);
+            var obj = {
+                'brand': null,
+                'item': null,
+                'cals': 0,
+                'protein': 0,
+                'fitnessRatio': 0.0,
+            }
+            for (var i = 1; i < jsonObject.length - 1; i++) {
+                var value = jsonObject[i].split(',');
+                obj = {
+                    'brand': value[0],
+                    'item': value[1],
+                    'cals': parseInt(value[2]),
+                    'protein': parseInt(value[3]),
+                    'fitnessRatio': parseFloat(value[4]).toFixed(2),
+                }
+                myArray.push(obj);
+            }
+
+            var myArray = getUnique(myArray, 'item');
+
+            //https://github.com/divanov11/sortable-table/blob/master/Sortable.html
+
+            $('th').on('click', function () {
+                var column = $(this).data('column')
+                var order = $(this).data('order')
+                var text = $(this).html()
+                text = text.substring(0, text.length - 1)
+
+                if (order == 'desc') {
+                    $(this).data('order', "asc")
+
+                    if (column == 'item' || column == 'brand') {
+                        myArray = myArray.sort((a, b) => a[column] > b[column] ? 1 : -1);
+                    }
+                    else {
+                        myArray = myArray.sort((a, b) => a[column] - b[column]);
+                    }
+
+                    text += '&#9660'
+
+                } else {
+                    $(this).data('order', "desc")
+                    if (column == 'item' || column == 'brand') {
+                        myArray = myArray.sort((a, b) => a[column] < b[column] ? 1 : -1);
+                    }
+                    else {
+                        myArray = myArray.sort((a, b) => b[column] - a[column]);
+                    }
+
+                    text += '&#9650'
+
+                }
+                $(this).html(text)
+                buildTable(myArray)
+            })
+
+            buildTable(myArray)
+
+            //we need the array to have each one as object
+            function buildTable(data) {
+                var table = document.getElementById('myTable')
+                table.innerHTML = ''
+                for (var j = 0; j < data.length; j++) {
+                    var row = `<tr>
+							<td>${data[j].brand}</td>
+							<td>${data[j].item}</td>
+							<td>${data[j].cals}</td>
+                            <td>${data[j].protein}</td>
+                            <td>${data[j].fitnessRatio}</td>
+					  </tr>`
+                    table.innerHTML += row
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
