@@ -42,40 +42,42 @@
     </table>
 
     <script>
-        function populateTable(restNum) {
-            var request = new XMLHttpRequest();
-            var restaurants = [
-                "Wendy's.csv", "McDonald's.csv", "Taco Bell.csv"
-            ];
-            request.open("GET", restaurants[restNum], false);
-            request.send(null);
+        function getUnique(arr, comp) {
 
-            //https://reactgo.com/removeduplicateobjects/
-            function getUnique(arr, comp) {
+        // store the comparison  values in array
+            const unique = arr.map(e => e[comp])
 
-                // store the comparison  values in array
-                const unique = arr.map(e => e[comp])
+            // store the indexes of the unique objects
+            .map((e, i, final) => final.indexOf(e) === i && i)
 
-                    // store the indexes of the unique objects
-                    .map((e, i, final) => final.indexOf(e) === i && i)
+            // eliminate the false indexes & return unique objects
+            .filter((e) => arr[e]).map(e => arr[e]);
 
-                    // eliminate the false indexes & return unique objects
-                    .filter((e) => arr[e]).map(e => arr[e]);
+            return unique;
+        }
 
-                return unique;
-            }
+        var request = new XMLHttpRequest();
+        var restaurants = [
+            "Wendy's.csv", "McDonald's.csv", "Taco Bell.csv"
+        ];
 
-            var allItemNames = []
-            var myArray = new Array();
-            var jsonObject = request.responseText.split(/\r?\n|\r/);
-            var obj = {
+        var allRestaurants = new Array(restaurants.length);
+        console.log(allRestaurants);
+
+        var obj = {
                 'brand': null,
                 'item': null,
                 'cals': 0,
                 'protein': 0,
                 'fitnessRatio': 0.0,
             }
-            for (var i = 1; i < jsonObject.length - 1; i++) {
+        for (var count = 0; count < restaurants.length; count++){
+            request.open("GET", restaurants[count], false);
+            request.send(null);
+            
+            var jsonObject = request.responseText.split(/\r?\n|\r/);
+            allRestaurants[count] = new Array(jsonObject.length-1);
+            for (var i = 1; i < jsonObject.length-1; i++) {
                 var value = jsonObject[i].split(',');
                 obj = {
                     'brand': value[0],
@@ -84,10 +86,12 @@
                     'protein': parseInt(value[3]),
                     'fitnessRatio': parseFloat(value[4]).toFixed(2),
                 }
-                myArray.push(obj);
+                allRestaurants[count].push(obj);
             }
+            allRestaurants[count] = getUnique(allRestaurants[count], 'item');
+        }
 
-            var myArray = getUnique(myArray, 'item');
+        function populateTable(restNum) {
 
             //https://github.com/divanov11/sortable-table/blob/master/Sortable.html
 
@@ -101,10 +105,10 @@
                     $(this).data('order', "asc")
 
                     if (column == 'item' || column == 'brand') {
-                        myArray = myArray.sort((a, b) => a[column] > b[column] ? 1 : -1);
+                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] > b[column] ? 1 : -1);
                     }
                     else {
-                        myArray = myArray.sort((a, b) => a[column] - b[column]);
+                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] - b[column]);
                     }
 
                     text += '&#9660'
@@ -112,20 +116,20 @@
                 } else {
                     $(this).data('order', "desc")
                     if (column == 'item' || column == 'brand') {
-                        myArray = myArray.sort((a, b) => a[column] < b[column] ? 1 : -1);
+                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] < b[column] ? 1 : -1);
                     }
                     else {
-                        myArray = myArray.sort((a, b) => b[column] - a[column]);
+                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => b[column] - a[column]);
                     }
 
                     text += '&#9650'
 
                 }
                 $(this).html(text)
-                buildTable(myArray)
+                buildTable(allRestaurants[restNum])
             })
 
-            buildTable(myArray)
+            buildTable(allRestaurants[restNum])
 
             //we need the array to have each one as object
             function buildTable(data) {
