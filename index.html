@@ -7,8 +7,12 @@
 
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- load jQuery and tablesorter scripts -->
+    <script type="text/javascript" src="/path/to/jquery-latest.js"></script>
+    <script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>
+
 <header> 
-    <h1>Fast Food Fitness</h1>  
+    <h1 style="text-align: center">Fast Food Fitness</h1>  
 </header> 
 
     <style>
@@ -16,25 +20,43 @@
             color: #fff;
         }
 
-        th {
-            background-color:darkslategray;
+
+        table{
+            table-layout: fixed;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        tr:nth-child(even){background-color: #f2f2f2;}
+        tr:first-child{background-color: #FAFAD2;}
+
+        .btn-group{
+            text-align: center;
+            width: 100%;
+        }
+        .btn{
+            font-size: 16px;
+            width: 33.3%;
         }
     </style>
 
-    <div class="btn-group" style="width:100%">
-        <button style="width:25%" onclick="populateTable(0)">Wendy's</button>
-        <button style="width:25%" onclick="populateTable(1)">McDonald's</button>
-        <button style="width:25%" onclick="populateTable(2)">Taco Bell</button>
+    <div class="btn-group">
+        <button class="btn" onclick="populateTable(0)">Wendy's</button>
+        <button class="btn" onclick="populateTable(1)">McDonald's</button>
+        <button class="btn" onclick="populateTable(2)">Taco Bell</button>
+        <button class="btn" onclick="populateTable(3)">Burger King</button>
     </div>
 
-    <table>
+    <table class="tablesorter">
+        <thead>
         <tr>
-            <th data-column="brand" data-order="desc">Brand &#9650</th>
-            <th data-column="item" data-order="desc">Item &#9650</th>
-            <th data-column="cals" data-order="desc">Calories &#9650</th>
-            <th data-column="protein" data-order="desc">Protein (g) &#9650</th>
-            <th data-column="fitnessRatio" data-order="desc">Fitness Ratio &#9650</th>
+            <!--<th width = "10%" style="background-color:darkslategray" data-column="brand" data-order="desc">Brand &#9650</th>-->
+            <th width = "70%" style="background-color:darkslategray" data-column="item" data-order="desc">Item</th>
+            <th width = "10%" style="background-color:darkslategray" data-column="cals" data-order="desc">Calories</th>
+            <th width = "10%" style="background-color:darkslategray" data-column="protein" data-order="desc">Protein (g)</th>
+            <th width = "10%" style="background-color:darkslategray" data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
         </tr>
+        </thead>
 
         <tbody id="myTable">
 
@@ -58,11 +80,14 @@
 
         var request = new XMLHttpRequest();
         var restaurants = [
-            "Wendy's.csv", "McDonald's.csv", "Taco Bell.csv"
+            "Wendy's.csv",
+            "McDonald's.csv",
+            "Taco Bell.csv",
+            "Burger King.csv"
         ];
+        var restColors = ['#ED1B24', '#FFC72C', '#702082',"#F2A900"];
 
         var allRestaurants = new Array(restaurants.length);
-        console.log(allRestaurants);
 
         var obj = {
                 'brand': null,
@@ -71,15 +96,28 @@
                 'protein': 0,
                 'fitnessRatio': 0.0,
             }
+
         for (var count = 0; count < restaurants.length; count++){
             request.open("GET", restaurants[count], false);
             request.send(null);
             
             var jsonObject = request.responseText.split(/\r?\n|\r/);
             allRestaurants[count] = new Array(jsonObject.length-1);
+
+            obj = {
+                'brand':'Bodybuilder Staple',
+                'item':'Chicken Breast',
+                'cals':126,
+                'protein': 25,
+                'fitnessRatio': parseFloat(126/25).toFixed(2),
+            }
+            allRestaurants[count].push(obj);
             for (var i = 1; i < jsonObject.length-1; i++) {
                 var value = jsonObject[i].split(',');
-                obj = {
+                protein = parseInt(value[3]);
+
+                if(protein > 4){
+                    obj = {
                     'brand': value[0],
                     'item': value[1],
                     'cals': parseInt(value[2]),
@@ -87,57 +125,30 @@
                     'fitnessRatio': parseFloat(value[4]).toFixed(2),
                 }
                 allRestaurants[count].push(obj);
+                }
             }
             allRestaurants[count] = getUnique(allRestaurants[count], 'item');
         }
 
         function populateTable(restNum) {
-
-            //https://github.com/divanov11/sortable-table/blob/master/Sortable.html
-
-            $('th').on('click', function () {
-                var column = $(this).data('column')
-                var order = $(this).data('order')
-                var text = $(this).html()
-                text = text.substring(0, text.length - 1)
-
-                if (order == 'desc') {
-                    $(this).data('order', "asc")
-
-                    if (column == 'item' || column == 'brand') {
-                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] > b[column] ? 1 : -1);
-                    }
-                    else {
-                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] - b[column]);
-                    }
-
-                    text += '&#9660'
-
-                } else {
-                    $(this).data('order', "desc")
-                    if (column == 'item' || column == 'brand') {
-                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => a[column] < b[column] ? 1 : -1);
-                    }
-                    else {
-                        allRestaurants[restNum] = allRestaurants[restNum].sort((a, b) => b[column] - a[column]);
-                    }
-
-                    text += '&#9650'
-
-                }
-                $(this).html(text)
-                buildTable(allRestaurants[restNum])
+            console.log(allRestaurants[restNum]);
+            allRestaurants[restNum].sort(function(a, b){
+                return parseFloat(a.fitnessRatio) - parseFloat(b.fitnessRatio);
             })
+
+            var header = document.getElementsByTagName('th');
+            for (var z = 0; z < Object.keys(obj).length-1; z++){
+                header[z].style.backgroundColor = restColors[restNum];
+            }
 
             buildTable(allRestaurants[restNum])
 
-            //we need the array to have each one as object
             function buildTable(data) {
-                var table = document.getElementById('myTable')
+
+                var table = document.getElementById('myTable');
                 table.innerHTML = ''
-                for (var j = 0; j < data.length; j++) {
+                for (var j = 0; j < data.length-1; j++) {
                     var row = `<tr>
-							<td>${data[j].brand}</td>
 							<td>${data[j].item}</td>
 							<td>${data[j].cals}</td>
                             <td>${data[j].protein}</td>
