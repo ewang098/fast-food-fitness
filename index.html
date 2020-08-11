@@ -14,13 +14,22 @@
 <header> 
     <h1 style="text-align: center">Fast Food Fitness</h1>  
 </header> 
-
     <style>
-        th {
-            color: #fff;
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background: repeating-linear-gradient(
+            45deg,
+            #388087,
+            #388087 25em,
+            #6FB3B8 25em,
+            #6FB3B8 50em
+  );
         }
-
-
+        header{
+            font-size: 1.8em;
+            color: #f2f2f2;
+            text-shadow: -1px 0px 5px #595959,1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
+        }
         table{
             table-layout: fixed;
             width: 80%;
@@ -34,9 +43,19 @@
             text-align: center;
             width: 100%;
         }
+        #tableStyle th{
+            background-color: #d9d9d9;
+            color: #f2f2f2;
+            text-shadow: -1px -1px 1px #595959,1px -1px 1px #595959, -1px 1px 1px #595959, 1px 1px 1px #595959;
+        }
+        #tableStyle tr{
+            font-size: 1.25em;
+            height: 1.5em;
+            text-align:center;
+        }
         .btn{
             font-size: 16px;
-            width: 33.3%;
+            width: 20%;
         }
     </style>
 
@@ -45,16 +64,23 @@
         <button class="btn" onclick="populateTable(1)">McDonald's</button>
         <button class="btn" onclick="populateTable(2)">Taco Bell</button>
         <button class="btn" onclick="populateTable(3)">Burger King</button>
+        <button class="btn" onclick="populateTable(4)">Five Guys</button>
+        <button class="btn" onclick="populateTable(5)">KFC</button>
+        <button class="btn" onclick="populateTable(6)">Chick-fil-A</button>
+        <button class="btn" onclick="populateTable(7)">Wingstop</button>
+        <button class="btn" onclick="populateTable(8)">Whataburger</button>
+        <button class="btn" onclick="populateTable(9)">Jack in the Box</button>
+        <button class="btn" onclick="populateTable(10)">Sonic</button>
     </div>
 
-    <table class="tablesorter">
+    <table class="tablesorter" id="tableStyle">
         <thead>
         <tr>
             <!--<th width = "10%" style="background-color:darkslategray" data-column="brand" data-order="desc">Brand &#9650</th>-->
-            <th width = "70%" style="background-color:darkslategray" data-column="item" data-order="desc">Item</th>
-            <th width = "10%" style="background-color:darkslategray" data-column="cals" data-order="desc">Calories</th>
-            <th width = "10%" style="background-color:darkslategray" data-column="protein" data-order="desc">Protein (g)</th>
-            <th width = "10%" style="background-color:darkslategray" data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
+            <th width = "70%"  data-column="item" data-order="desc">Item</th>
+            <th width = "10%"  data-column="cals" data-order="desc">Calories</th>
+            <th width = "10%"  data-column="protein" data-order="desc">Protein (g)</th>
+            <th width = "10%"  data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
         </tr>
         </thead>
 
@@ -83,7 +109,14 @@
             "Wendy's.csv",
             "McDonald's.csv",
             "Taco Bell.csv",
-            "Burger King.csv"
+            "Burger King.csv",
+            "Five Guys.csv",
+            "KFC.csv",
+            "Chick-fil-A.csv",
+            "Wingstop.csv",
+            "Whataburger.csv",
+            "Jack in the Box.csv",
+            "Sonic.csv"
         ];
         var restColors = ['#ED1B24', '#FFC72C', '#702082',"#F2A900"];
 
@@ -131,7 +164,7 @@
         }
 
         function populateTable(restNum) {
-            console.log(allRestaurants[restNum]);
+            //console.log(allRestaurants[restNum]);
             allRestaurants[restNum].sort(function(a, b){
                 return parseFloat(a.fitnessRatio) - parseFloat(b.fitnessRatio);
             })
