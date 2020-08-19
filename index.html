@@ -1,9 +1,10 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Fast Food Fitness</title>
+    <title>Fast Food Fitness</title>
 </head>
+<link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
 
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -11,180 +12,45 @@
     <script type="text/javascript" src="/path/to/jquery-latest.js"></script>
     <script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>
 
-<header> 
-    <h1 style="text-align: center">Fast Food Fitness</h1>  
-</header> 
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        header{
-            font-size: 1.8em;
-            color: #f2f2f2;
-            text-shadow: -1px 0px 5px #595959,1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
-        }
-        table{
-            table-layout: fixed;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        tr:nth-child(even){background-color: #f2f2f2;}
-        tr:first-child{background-color: #FAFAD2;}
+    <div class="flex">
+        <div class="dropdown">
+            <button class="dropbtn">Restaurants</button>
+            <div class="dropdown-content">
+                <button class="btn" onclick="populateTable(0)">Wendy's</button>
+                <button class="btn" onclick="populateTable(1)">McDonald's</button>
+                <button class="btn" onclick="populateTable(2)">Taco Bell</button>
+                <button class="btn" onclick="populateTable(3)">Burger King</button>
+                <button class="btn" onclick="populateTable(4)">Five Guys</button>
+                <button class="btn" onclick="populateTable(5)">KFC</button>
+                <button class="btn" onclick="populateTable(6)">Chick-fil-A</button>
+                <button class="btn" onclick="populateTable(7)">Wingstop</button>
+                <button class="btn" onclick="populateTable(8)">Whataburger</button>
+                <button class="btn" onclick="populateTable(9)">Jack in the Box</button>
+                <button class="btn" onclick="populateTable(10)">Sonic</button>
+            </div>
+        </div>
 
-        .btn-group{
-            text-align: center;
-            width: 100%;
-        }
-        #tableStyle th{
-            background-color: #d9d9d9;
-            color: #f2f2f2;
-            text-shadow: -1px -1px 1px #595959,1px -1px 1px #595959, -1px 1px 1px #595959, 1px 1px 1px #595959;
-        }
-        #tableStyle tr{
-            font-size: 1.25em;
-            height: 1.5em;
-            text-align:center;
-        }
-        .btn{
-            font-size: 16px;
-            width: 20%;
-        }
-    </style>
-
-    <div class="btn-group">
-        <button class="btn" onclick="populateTable(0)">Wendy's</button>
-        <button class="btn" onclick="populateTable(1)">McDonald's</button>
-        <button class="btn" onclick="populateTable(2)">Taco Bell</button>
-        <button class="btn" onclick="populateTable(3)">Burger King</button>
-        <button class="btn" onclick="populateTable(4)">Five Guys</button>
-        <button class="btn" onclick="populateTable(5)">KFC</button>
-        <button class="btn" onclick="populateTable(6)">Chick-fil-A</button>
-        <button class="btn" onclick="populateTable(7)">Wingstop</button>
-        <button class="btn" onclick="populateTable(8)">Whataburger</button>
-        <button class="btn" onclick="populateTable(9)">Jack in the Box</button>
-        <button class="btn" onclick="populateTable(10)">Sonic</button>
+        <header>
+            <h1>Fast Food Fitness</h1>
+        </header>
     </div>
 
     <table class="tablesorter" id="tableStyle">
         <thead>
-        <tr>
-            <!--<th width = "10%" style="background-color:darkslategray" data-column="brand" data-order="desc">Brand &#9650</th>-->
-            <th width = "70%"  data-column="item" data-order="desc">Item</th>
-            <th width = "10%"  data-column="cals" data-order="desc">Calories</th>
-            <th width = "10%"  data-column="protein" data-order="desc">Protein (g)</th>
-            <th width = "10%"  data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
-        </tr>
+            <tr>
+                <!--<th width = "10%" style="background-color:darkslategray" data-column="brand" data-order="desc">Brand &#9650</th>-->
+                <th width="70%" data-column="item" data-order="desc">Item</th>
+                <th width="10%" data-column="cals" data-order="desc">Calories</th>
+                <th width="10%" data-column="protein" data-order="desc">Protein (g)</th>
+                <th width="10%" data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
+            </tr>
         </thead>
-
         <tbody id="myTable">
 
         </tbody>
     </table>
 
-    <script>
-        function getUnique(arr, comp) {
-
-        // store the comparison  values in array
-            const unique = arr.map(e => e[comp])
-
-            // store the indexes of the unique objects
-            .map((e, i, final) => final.indexOf(e) === i && i)
-
-            // eliminate the false indexes & return unique objects
-            .filter((e) => arr[e]).map(e => arr[e]);
-
-            return unique;
-        }
-
-        var request = new XMLHttpRequest();
-        var restaurants = [
-            "Wendy's.csv",
-            "McDonald's.csv",
-            "Taco Bell.csv",
-            "Burger King.csv",
-            "Five Guys.csv",
-            "KFC.csv",
-            "Chick-fil-A.csv",
-            "Wingstop.csv",
-            "Whataburger.csv",
-            "Jack in the Box.csv",
-            "Sonic.csv"
-        ];
-        var restColors = ['#ED1B24', '#FFC72C', '#702082',"#F2A900"];
-
-        var allRestaurants = new Array(restaurants.length);
-
-        var obj = {
-                'brand': null,
-                'item': null,
-                'cals': 0,
-                'protein': 0,
-                'fitnessRatio': 0.0,
-            }
-
-        for (var count = 0; count < restaurants.length; count++){
-            request.open("GET", restaurants[count], false);
-            request.send(null);
-            
-            var jsonObject = request.responseText.split(/\r?\n|\r/);
-            allRestaurants[count] = new Array(jsonObject.length-1);
-
-            obj = {
-                'brand':'Bodybuilder Staple',
-                'item':'Chicken Breast',
-                'cals':126,
-                'protein': 25,
-                'fitnessRatio': parseFloat(126/25).toFixed(2),
-            }
-            allRestaurants[count].push(obj);
-            for (var i = 1; i < jsonObject.length-1; i++) {
-                var value = jsonObject[i].split(',');
-                protein = parseInt(value[3]);
-
-                if(protein > 4){
-                    obj = {
-                    'brand': value[0],
-                    'item': value[1],
-                    'cals': parseInt(value[2]),
-                    'protein': parseInt(value[3]),
-                    'fitnessRatio': parseFloat(value[4]).toFixed(2),
-                }
-                allRestaurants[count].push(obj);
-                }
-            }
-            allRestaurants[count] = getUnique(allRestaurants[count], 'item');
-        }
-
-        function populateTable(restNum) {
-            //console.log(allRestaurants[restNum]);
-            allRestaurants[restNum].sort(function(a, b){
-                return parseFloat(a.fitnessRatio) - parseFloat(b.fitnessRatio);
-            })
-
-            var header = document.getElementsByTagName('th');
-            for (var z = 0; z < Object.keys(obj).length-1; z++){
-                header[z].style.backgroundColor = restColors[restNum];
-            }
-
-            buildTable(allRestaurants[restNum])
-
-            function buildTable(data) {
-
-                var table = document.getElementById('myTable');
-                table.innerHTML = ''
-                for (var j = 0; j < data.length-1; j++) {
-                    var row = `<tr>
-							<td>${data[j].item}</td>
-							<td>${data[j].cals}</td>
-                            <td>${data[j].protein}</td>
-                            <td>${data[j].fitnessRatio}</td>
-					  </tr>`
-                    table.innerHTML += row
-                }
-            }
-        }
-    </script>
+    <script type="text/javascript" src="tablePopulate.js"></script>
 </body>
 
 </html>
