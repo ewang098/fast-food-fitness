@@ -26,7 +26,19 @@ var restaurants = [
     "Jack in the Box.csv",
     "Sonic.csv"
 ];
-var restColors = ['#ED1B24', '#FFC72C', '#702082', "#F2A900"];
+
+var restPalette = 
+    [['#ED1B24','#FAF600'],
+    ['#FFC72C','#DA291C'],
+    ['#702082','#A77BCA'],
+    ['#DA291C','#0033A0','#F2A900'],
+    ['#CF0A2B','#dd536a'],
+    ['#A3080C','#F5D4B7'],
+    ['#E51636','#Ef7386'],
+    ['#066A36','#69A586'],
+    ['#ff770f','#FFAD6F'],
+    ['#E4011A','#B50A37'],
+    ['#EF3B44','#FCDD2A','#97A8D3']];
 
 var allRestaurants = new Array(restaurants.length);
 
@@ -52,6 +64,7 @@ for (var count = 0; count < restaurants.length; count++) {
         'protein': 25,
         'fitnessRatio': parseFloat(126 / 25).toFixed(2),
     }
+
     allRestaurants[count].push(obj);
     for (var i = 1; i < jsonObject.length - 1; i++) {
         var value = jsonObject[i].split(',');
@@ -72,15 +85,26 @@ for (var count = 0; count < restaurants.length; count++) {
 }
 
 function populateTable(restNum) {
-    //console.log(allRestaurants[restNum]);
     allRestaurants[restNum].sort(function (a, b) {
         return parseFloat(a.fitnessRatio) - parseFloat(b.fitnessRatio);
     })
 
-    var header = document.getElementsByTagName('th');
-    for (var z = 0; z < Object.keys(obj).length - 1; z++) {
-        header[z].style.backgroundColor = restColors[restNum];
+    palColorLength = restPalette[restNum].length;
+
+    backgroundInput = 'linear-gradient(-45deg,';
+
+    for (var col = 0; col<palColorLength; col++){
+        backgroundInput += restPalette[restNum][col];
+        if(col<palColorLength -1){
+            backgroundInput += ','
+        }
+        else{
+            backgroundInput += ')';
+        }
     }
+    document.body.style.background = backgroundInput;
+
+    document.getElementById("restName").innerHTML = allRestaurants[restNum][1].brand;
 
     buildTable(allRestaurants[restNum])
 
