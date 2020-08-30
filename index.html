@@ -4,55 +4,88 @@
 <head>
     <title>Fast Food Fitness</title>
 </head>
-<link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<style>
+    html{
+        height: 100%;
+    }
+    body{
+        padding-top: 80px;
+        height: 100%;
+        margin: 0;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    tr{background-color: #f2f2f2;}
+    tr:first-child{background-color: #FAFAD2;}
+    tbody {
+        display: block;
+        max-height: 700px;
+        overflow-y: scroll;
+    }
+    thead, tbody tr{
+        display:table;
+        widows: 100%;
+        table-layout:fixed;
+    }
+    thead{
+        width: calc(100% - 17px);
+    }
+    tr {
+        display: table;
+        width: 100%;
+    }
+    @media only screen and (min-width:1200px){
+    .tableDiv{
+        padding-right: 15em;
+        padding-left: 15em;
+    }
+}
 
-<body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- load jQuery and tablesorter scripts -->
-    <script type="text/javascript" src="/path/to/jquery-latest.js"></script>
-    <script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>
-
-    <div class="flex">
+</style>
+    <nav class="navbar fixed-top navbar-light bg-light">
         <div class="dropdown">
-            <button class="dropbtn">Restaurants</button>
-            <div class="dropdown-content">
-                <button class="btn" onclick="populateTable(0)">Wendy's</button>
-                <button class="btn" onclick="populateTable(1)">McDonald's</button>
-                <button class="btn" onclick="populateTable(2)">Taco Bell</button>
-                <button class="btn" onclick="populateTable(3)">Burger King</button>
-                <button class="btn" onclick="populateTable(4)">Five Guys</button>
-                <button class="btn" onclick="populateTable(5)">KFC</button>
-                <button class="btn" onclick="populateTable(6)">Chick-fil-A</button>
-                <button class="btn" onclick="populateTable(7)">Wingstop</button>
-                <button class="btn" onclick="populateTable(8)">Whataburger</button>
-                <button class="btn" onclick="populateTable(9)">Jack in the Box</button>
-                <button class="btn" onclick="populateTable(10)">Sonic</button>
+            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Restaurants</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item" onclick="populateTable(0)">Wendy's</button>
+                <button class="dropdown-item" onclick="populateTable(1)">McDonald's</button>
+                <button class="dropdown-item" onclick="populateTable(2)">Taco Bell</button>
+                <button class="dropdown-item" onclick="populateTable(3)">Burger King</button>
+                <button class="dropdown-item" onclick="populateTable(4)">Five Guys</button>
+                <button class="dropdown-item" onclick="populateTable(5)">KFC</button>
+                <button class="dropdown-item" onclick="populateTable(6)">Chick-fil-A</button>
+                <button class="dropdown-item" onclick="populateTable(7)">Wingstop</button>
+                <button class="dropdown-item" onclick="populateTable(8)">Whataburger</button>
+                <button class="dropdown-item" onclick="populateTable(9)">Jack in the Box</button>
+                <button class="dropdown-item" onclick="populateTable(10)">Sonic</button>
             </div>
         </div>
-
-        <header>
-            <h1 id='restName'>Fast Food Fitness</h1>
-        </header>
-        <div>
-        <a href='https://github.com/ewang098/fast-food-fitness/blob/master/nutritionixAPIInterface.js' target='_blank'><button>How I got this data<br><small>NutritionixAPI</small></button></a>
+        <h1>Fast Food Fitness</h1>
+        <a href='https://github.com/ewang098/fast-food-fitness/blob/master/nutritionixAPIInterface.js' target='_blank'><button class="btn btn-success">How I got this data<br><small>NutritionixAPI</small></button></a>
+    </nav>
+    <body>
+        <div class="tableDiv">
+                <header>
+                    <h1 class="text-white bg-dark text-center" id='restName'>Please Select Restaurant</h1>
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th width="70%" data-column="item" data-order="desc">Item</th>
+                                <th width="10%" data-column="cals" data-order="desc">Calories</th>
+                                <th width="10%" data-column="protein" data-order="desc">Protein (grams)</th>
+                                <th width="10%" data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable"></tbody>
+                    </table>
+                </header>
         </div>
-    </div>
-
-    <table class="tablesorter" id="tableStyle">
-        <thead>
-            <tr>
-                <!--<th width = "10%" style="background-color:darkslategray" data-column="brand" data-order="desc">Brand &#9650</th>-->
-                <th width="70%" data-column="item" data-order="desc">Item</th>
-                <th width="10%" data-column="cals" data-order="desc">Calories</th>
-                <th width="10%" data-column="protein" data-order="desc">Protein (g)</th>
-                <th width="10%" data-column="fitnessRatio" data-order="desc">Fitness Ratio</th>
-            </tr>
-        </thead>
-        <tbody id="myTable">
-    </table>
-</div>
-
     <script type="text/javascript" src="tablePopulate.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 
 </html>

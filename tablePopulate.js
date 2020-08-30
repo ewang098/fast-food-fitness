@@ -114,10 +114,10 @@ function populateTable(restNum) {
         table.innerHTML = ''
         for (var j = 0; j < data.length - 1; j++) {
             var row = `<tr>
-                        <td>${data[j].item}</td>
-                        <td>${data[j].cals}</td>
-                        <td>${data[j].protein}</td>
-                        <td>${data[j].fitnessRatio}</td>
+                        <td width="70%">${data[j].item}</td>
+                        <td width="10%" style="text-align:center;">${data[j].cals}</td>
+                        <td width="10%" style="text-align:center;">${data[j].protein}</td>
+                        <td width="10%" style="text-align:center;">${data[j].fitnessRatio}</td>
                   </tr>`
             table.innerHTML += row
         }
