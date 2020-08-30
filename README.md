@@ -3,6 +3,4 @@
 
 HTML/CSS/JavaScript
 
-:construction:Work in progress:construction:
-
 https://ewang098.github.io/fast-food-fitness/
