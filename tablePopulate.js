@@ -24,7 +24,8 @@ var restaurants = [
     "Wingstop.csv",
     "Whataburger.csv",
     "Jack in the Box.csv",
-    "Sonic.csv"
+    "Sonic.csv",
+    "PandaExpress.csv"
 ];
 
 var restPalette = 
@@ -38,7 +39,8 @@ var restPalette =
     ['#066A36','#69A586'],
     ['#ff770f','#FFAD6F'],
     ['#E4011A','#B50A37'],
-    ['#EF3B44','#FCDD2A','#97A8D3']];
+    ['#EF3B44','#FCDD2A','#97A8D3'],
+    ['#FF0000','#FFFFFF']];
 
 var allRestaurants = new Array(restaurants.length);
 
